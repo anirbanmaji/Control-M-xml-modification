@@ -2,7 +2,7 @@
 import xml.etree.ElementTree as ET
 from correctFileName import correctFileName
 
-def migrateRSDS_QAtoPROD(qaXML):
+def migrateBIH_QAtoPROD(qaXML):
     filedata = None
     with open(qaXML, 'r') as file:
         filedata = file.read()
@@ -27,10 +27,10 @@ def migrateRSDS_QAtoPROD(qaXML):
         if (item.attrib['JOBNAME'][-2:] == ('FW' or 'AR')):
             item.attrib['NODEID'] = 'aup4094l.unix.anz'
         else:
-            item.attrib['NODEID'] = 'aup4096l.unix.anz'
-    
+            item.attrib['NODEID'] = 'aup4094l.unix.anz'
+            
     correctFileName(finalFilename).write(finalFilename)
     print('Add schedule and calender')
     
 
-migrateRSDS_QAtoPROD('test.xml')
+migrateBIH_QAtoPROD('test.xml')
