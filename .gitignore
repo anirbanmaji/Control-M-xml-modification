@@ -1,3 +1,2 @@
-test.xml
-test.PROD.xml
+*.xml
 __pycache__
