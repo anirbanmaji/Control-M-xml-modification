@@ -2,15 +2,15 @@ import xml.etree.ElementTree as ET
 import re
 import commands as cm
 
-def putCommand():
+def putCommand(src,dest):
     xmlfile ="new.xml"
     tree = ET.parse(xmlfile)
     root = tree.getroot()
     for item in root.findall('./FOLDER/JOB'):
         jobName = item.attrib['JOBNAME']
-        #filewatchers = re.findall(r'(?<=(^BIHAU_D_BHTALLYMAN_CRDH_))(.*?)(?=(_(FW))$)', jobName)#[0][1]
         action = re.findall(r'(FW|GBT|MSEQ|CD|EBT)$', jobName)#change
-        fileExt = re.findall(r'(?<=(^BIHAU_D_BHTALLYMAN_CRDH_))(.*?)(?=(_(FW|GBT|MSEQ|CD|EBT))$)', jobName)#change
+        regex = r"(?<=(^BIHAU_T2_BH"+src+"_"+dest+"_))(.*?)(?=(_(FW|GBT|MSEQ|CD|EBT))$)"
+        fileExt = re.findall(regex, jobName)#change
         if len(action)!=0 and len(fileExt)!=0:
             action = action[0]
             fileExt = fileExt[0][1]
@@ -40,7 +40,7 @@ def putCommand():
                 
         item.set('CMDLINE', commandline)
 
-    tree.write('out.xml')
+    tree.write(src+"_"+dest+".xml")
 
 if __name__ == "__main__":
-    putCommand()
+    putCommand("GADEN","TALLYMAN")

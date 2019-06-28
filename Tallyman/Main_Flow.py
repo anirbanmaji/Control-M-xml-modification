@@ -17,12 +17,13 @@ def createSingleFlowTemplate(folderName, subapp, application, appCode, countryCo
     
     jobBufferBeforeTree = []
 
-    serverToCode = {'PCMAU01':'P', 'DCMAU02':'D', 'QCMAU01':'P'}#change dending on DEV or SIT
-    serverToNode = {'PCMAU01':'aup4430l.unix.anz', 'DCMAU02':'aud4458l.unix.anz', 'QCMAU01':'auq4527l.unix.anz'}#change dending on DEV or SIT
+    serverToCode = {'PCMAU01':'P', 'DCMAU02':'T2', 'QCMAU01':'P'}#change dending on DEV or SIT
+    serverToNode = {'PCMAU01':'aup4430l.unix.anz', 'DCMAU02':'aud4459l.unix.anz', 'QCMAU01':'auq4527l.unix.anz'}#change dending on DEV or SIT
     
 
     serverCode = []
     serverCode.append(serverToCode[server])
+
     
     for layer in flow:
         sameLevelJobs = []
@@ -32,8 +33,6 @@ def createSingleFlowTemplate(folderName, subapp, application, appCode, countryCo
         for node in layer:
             for actExt in node:
                 extList = node[actExt]
-
-                '''The following part is used only for job name'''
                 for ac in appCode:
                     for cc in countryCode:
                         for sc in serverCode:
@@ -89,7 +88,7 @@ def createSingleFlowTemplate(folderName, subapp, application, appCode, countryCo
     return tree
 
 
-def flow_details():
+def flow_details(src,dest,env,server):
     '''
     ac in appCode:
     cc in countryCode:
@@ -103,16 +102,17 @@ def flow_details():
     extSbt = ('ac','cc','eac','sc','ss','pc')#change
     flow = [[{'FW':extension}],[{'GBT':extension}],[{'MSEQ':extension}],[{'CD':extension}],[{'EBT':extension}]]
     modifiedFile = "new.xml"
-    server = "DCMAU02"
-    short_file_names = ["SECURITYACTIONS",
-                        "CUSTOMERFLAGS",
-                        "ACCOUNTFLAGS",
-                        "SECURITYFLAGS"]#change
+    short_file_names = ['CONTACTLOG_GADENS',
+'ACCUPDATES_GADENS',
+'SECUPDATES_GADENS',
+'DEFAULTUPDATES_GADENS_HL']#change
     
     #createSingleFlowTemplate(folderName, subapp, application, appCode, countryCode, effectiveAppCode, srcSys, projectCode, filePattern, server, flow)
-    createSingleFlowTemplate('BIHAU_D_BHTALLYMAN_CRDH','BIHAU_D_TALLYMAN_CRDH','BIHAU_D',['BIH'],['AU'],['BH'],['TALLYMAN'],['CRDH'],short_file_names, server, flow).write(modifiedFile)
+    createSingleFlowTemplate('BIHAU_'+env+'_BH'+src+'_'+dest,'BIHAU_'+env+'_'+src+'_'+dest,'BIHAU_'+env,['BIH'],['AU'],['BH'],[src],[dest],short_file_names, server, flow).write(modifiedFile)
 
 
 if __name__=="__main__":
-    flow_details()
-    putCommand()
+    src = 'GADEN'
+    dest = 'TALLYMAN'
+    flow_details(src,dest,'T2','DCMAU02')#change
+    putCommand(src,dest)
